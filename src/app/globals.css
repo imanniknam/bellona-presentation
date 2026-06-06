@@ -4,183 +4,185 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CSS Custom Properties ───────────────────────────────────────── */
+/* ─── Design Tokens ───────────────────────────────────────────────── */
 :root {
-  --color-bg:        #020617;
-  --color-surface:   #080f1e;
-  --color-elevated:  #0d1526;
-  --color-border:    #1a2740;
-  --color-green:     #22c55e;
-  --color-blue:      #3b82f6;
-  --color-purple:    #8b5cf6;
-  --color-cyan:      #06b6d4;
-  --color-amber:     #f59e0b;
-  --font-inter:      'Inter', system-ui, sans-serif;
-  --font-space:      'Space Grotesk', ui-monospace, monospace;
+  --color-bg:       #020617;
+  --color-surface:  #060d1f;
+  --color-elevated: #0a1628;
+  --color-border:   rgba(255,255,255,0.05);
+  --color-green:    #34d399;
+  --color-blue:     #60a5fa;
+  --color-purple:   #a78bfa;
+  --color-cyan:     #22d3ee;
+  --color-amber:    #fbbf24;
+  --font-sans:      'Inter', system-ui, -apple-system, sans-serif;
+  --font-display:   'Space Grotesk', ui-monospace, monospace;
+  --font-mono:      ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
 }
 
-/* ─── Base Reset ──────────────────────────────────────────────────── */
-* {
-  box-sizing: border-box;
-}
+/* ─── Base ────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--color-bg);
-  color: #f8fafc;
-  font-family: var(--font-inter);
+  color: #f1f5f9;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  /* Subtle noise texture — adds depth without decoration */
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.025'/%3E%3C/svg%3E");
 }
 
-/* ─── Custom Scrollbar ────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 4px; height: 4px; }
+/* ─── Tabular numerals — precision data rendering ─────────────────── */
+/* Every number in the app is tabular — prevents width jitter on updates */
+.font-mono,
+.tabular-nums,
+[class*="font-mono"] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum", "ss01";
+  letter-spacing: -0.01em;
+}
+
+/* ─── Custom scrollbar — minimal, Stripe-style ────────────────────── */
+::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #22c55e44; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(52,211,153,0.25); }
 
-/* ─── Glass Card ──────────────────────────────────────────────────── */
+/* ─── Glass — two levels of depth ────────────────────────────────── */
 .glass {
-  background: rgba(8, 15, 30, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(6, 13, 31, 0.72);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
 }
 
-.glass-green {
-  box-shadow: 0 0 40px rgba(34, 197, 94, 0.08), inset 0 1px 0 rgba(34, 197, 94, 0.06);
-  border-color: rgba(34, 197, 94, 0.15);
+/* Slightly more opaque — for modals, panels, command palette */
+.glass-heavy {
+  background: rgba(3, 7, 18, 0.92);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
 }
 
-.glass-blue {
-  box-shadow: 0 0 40px rgba(59, 130, 246, 0.08), inset 0 1px 0 rgba(59, 130, 246, 0.06);
-  border-color: rgba(59, 130, 246, 0.15);
-}
+/* ─── Glow variants — used sparingly, only at critical surfaces ───── */
+.glass-green  { box-shadow: 0 0 32px rgba(52,211,153,0.06),  inset 0 1px 0 rgba(52,211,153,0.05);  }
+.glass-blue   { box-shadow: 0 0 32px rgba(96,165,250,0.06),  inset 0 1px 0 rgba(96,165,250,0.05);  }
+.glass-purple { box-shadow: 0 0 32px rgba(167,139,250,0.06), inset 0 1px 0 rgba(167,139,250,0.05); }
+.glass-amber  { box-shadow: 0 0 32px rgba(251,191,36,0.06),  inset 0 1px 0 rgba(251,191,36,0.05);  }
 
-.glass-purple {
-  box-shadow: 0 0 40px rgba(139, 92, 246, 0.08), inset 0 1px 0 rgba(139, 92, 246, 0.06);
-  border-color: rgba(139, 92, 246, 0.15);
-}
-
-.glass-amber {
-  box-shadow: 0 0 40px rgba(245, 158, 11, 0.08), inset 0 1px 0 rgba(245, 158, 11, 0.06);
-  border-color: rgba(245, 158, 11, 0.15);
-}
-
-/* ─── Grid Pattern ────────────────────────────────────────────────── */
+/* ─── Precision grid — Palantir data canvas aesthetic ────────────── */
 .grid-bg {
   background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-  background-size: 64px 64px;
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
-/* ─── Gradient Text ───────────────────────────────────────────────── */
+/* Dot grid variant — for hero sections */
+.dot-grid {
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── Gradient text — used only for headlines, never labels ──────── */
 .gradient-text-green {
-  background: linear-gradient(135deg, #22c55e, #06b6d4);
+  background: linear-gradient(135deg, #34d399 0%, #06b6d4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 .gradient-text-purple {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 .gradient-text-blue {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ─── Live Pulse ──────────────────────────────────────────────────── */
-.pulse-green {
-  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
-  animation: pulse-ring 2s infinite;
+/* ─── Typography — display vs body discipline ─────────────────────── */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
-@keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-  70%  { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+/* Small caps section labels */
+.label-caps {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(100,116,139,0.8);
 }
 
-/* ─── Agent Glow ──────────────────────────────────────────────────── */
-.agent-glow-green  { filter: drop-shadow(0 0 16px rgba(34, 197, 94, 0.5)); }
-.agent-glow-blue   { filter: drop-shadow(0 0 16px rgba(59, 130, 246, 0.5)); }
-.agent-glow-purple { filter: drop-shadow(0 0 16px rgba(139, 92, 246, 0.5)); }
-.agent-glow-amber  { filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.5)); }
-.agent-glow-cyan   { filter: drop-shadow(0 0 16px rgba(6, 182, 212, 0.5)); }
-.agent-glow-pink   { filter: drop-shadow(0 0 16px rgba(236, 72, 153, 0.5)); }
+/* ─── Recharts — remove default whitespace ────────────────────────── */
+.recharts-tooltip-wrapper { outline: none; }
+.recharts-default-tooltip  { display: none; }
+.recharts-surface          { overflow: visible; }
 
-/* ─── Background Blobs ────────────────────────────────────────────── */
+/* ─── Live pulse — two speeds ─────────────────────────────────────── */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+
+/* ─── Glow pulse on critical elements ────────────────────────────── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
+  50%       { box-shadow: 0 0 20px 2px rgba(52,211,153,0.12); }
+}
+.glow-pulse-green { animation: glow-pulse 4s ease-in-out infinite; }
+
+/* ─── Scan line — for audit page reveal ──────────────────────────── */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+.scan-line {
+  position: fixed;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(52,211,153,0.4), transparent);
+  pointer-events: none;
+  animation: scan-line 2s linear;
+}
+
+/* ─── Background blob — used only on landing, single accent ──────── */
 .bg-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
+  filter: blur(80px);
   pointer-events: none;
   will-change: transform;
 }
 
-/* ─── Shimmer Effect ──────────────────────────────────────────────── */
-@keyframes shimmer {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+/* ─── Data flow particle ──────────────────────────────────────────── */
+@keyframes flowDown {
+  0%   { transform: translateY(-4px); opacity: 0; }
+  8%   { opacity: 0.9; }
+  92%  { opacity: 0.9; }
+  100% { transform: translateY(52px); opacity: 0; }
 }
 
-.shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%);
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-}
+/* ─── Agent glow filters ──────────────────────────────────────────── */
+.agent-glow-green  { filter: drop-shadow(0 0 12px rgba(52,211,153,0.4));  }
+.agent-glow-blue   { filter: drop-shadow(0 0 12px rgba(96,165,250,0.4));  }
+.agent-glow-purple { filter: drop-shadow(0 0 12px rgba(167,139,250,0.4)); }
+.agent-glow-amber  { filter: drop-shadow(0 0 12px rgba(251,191,36,0.4));  }
+.agent-glow-cyan   { filter: drop-shadow(0 0 12px rgba(34,211,238,0.4));  }
+.agent-glow-pink   { filter: drop-shadow(0 0 12px rgba(244,114,182,0.4)); }
 
-/* ─── Connector Lines ─────────────────────────────────────────────── */
-.connector {
-  position: absolute;
-  background: linear-gradient(to bottom, rgba(34,197,94,0.4), rgba(34,197,94,0.05));
-  width: 1px;
-}
-
-/* ─── Chart Tooltip ───────────────────────────────────────────────── */
-.recharts-tooltip-wrapper { outline: none; }
-.custom-tooltip {
-  background: rgba(8, 15, 30, 0.95);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-family: var(--font-space);
-}
-
-/* ─── Animated Border ─────────────────────────────────────────────── */
-@keyframes border-glow {
-  0%, 100% { border-color: rgba(34, 197, 94, 0.2); }
-  50%       { border-color: rgba(34, 197, 94, 0.5); }
-}
-
-.border-glow-animate {
-  animation: border-glow 3s ease-in-out infinite;
-}
-
-/* ─── Page Transition ─────────────────────────────────────────────── */
-.page-enter {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.page-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 400ms, transform 400ms;
-}
-
-/* ─── Score Ring ──────────────────────────────────────────────────── */
+/* ─── Score ring SVG animation ───────────────────────────────────── */
 .score-ring {
   stroke-dasharray: 251.2;
   stroke-dashoffset: 251.2;
@@ -188,3 +190,20 @@ body {
   transform: rotate(-90deg);
   transform-origin: center;
 }
+
+/* ─── Selection color ─────────────────────────────────────────────── */
+::selection {
+  background: rgba(52,211,153,0.2);
+  color: #f1f5f9;
+}
+
+/* ─── Focus ring — accessible, brand-consistent ───────────────────── */
+:focus-visible {
+  outline: 2px solid rgba(52,211,153,0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Hide scrollbar utility ──────────────────────────────────────── */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }

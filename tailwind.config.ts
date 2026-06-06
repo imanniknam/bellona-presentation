@@ -11,17 +11,21 @@ const config: Config = {
       colors: {
         ai: {
           bg:       '#020617',
-          surface:  '#080f1e',
-          elevated: '#0d1526',
-          border:   '#1a2740',
-          green:    '#22c55e',
-          blue:     '#3b82f6',
-          purple:   '#8b5cf6',
-          cyan:     '#06b6d4',
-          amber:    '#f59e0b',
-          red:      '#ef4444',
-          pink:     '#ec4899',
+          surface:  '#060d1f',
+          elevated: '#0a1628',
+          border:   'rgba(255,255,255,0.05)',
+          green:    '#34d399',
+          blue:     '#60a5fa',
+          purple:   '#a78bfa',
+          cyan:     '#22d3ee',
+          amber:    '#fbbf24',
+          red:      '#f87171',
+          pink:     '#f472b6',
         },
+      },
+      spacing: {
+        // Sidebar width token — used in ml-[sidebar] and w-[sidebar]
+        'sidebar': '220px',
       },
       fontFamily: {
         sans:  ['var(--font-inter)', 'system-ui', 'sans-serif'],
